@@ -1,0 +1,134 @@
+CellProfiler Pipeline: http://www.cellprofiler.org
+Version:4
+DateRevision:319
+GitHash:
+ModuleCount:4
+HasImagePlaneDetails:False
+
+LoadData:[module_num:1|svn_version:\'Unknown\'|variable_revision_number:6|show_window:False|notes:\x5B\'\'\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
+    Input data file location:\xff\xfeD\x00e\x00f\x00a\x00u\x00l\x00t\x00 \x00I\x00n\x00p\x00u\x00t\x00 \x00F\x00o\x00l\x00d\x00e\x00r\x00\x7C\x00
+    Name of the file:\xff\xfel\x00o\x00a\x00d\x00_\x00d\x00a\x00t\x00a\x00.\x00c\x00s\x00v\x00
+    Load images based on this data?:\xff\xfeY\x00e\x00s\x00
+    Base image location:\xff\xfeN\x00o\x00n\x00e\x00\x7C\x00
+    Process just a range of rows?:\xff\xfeN\x00o\x00
+    Rows to process:\xff\xfe1\x00,\x001\x000\x000\x000\x000\x000\x00
+    Group images by metadata?:\xff\xfeY\x00e\x00s\x00
+    Select metadata tags for grouping:\xff\xfeP\x00l\x00a\x00t\x00e\x00,\x00W\x00e\x00l\x00l\x00,\x00S\x00i\x00t\x00e\x00
+    Rescale intensities?:\xff\xfeY\x00e\x00s\x00
+
+MeasureImageQuality:[module_num:2|svn_version:\'Unknown\'|variable_revision_number:5|show_window:False|notes:\x5B\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
+    Calculate metrics for which images?:\xff\xfeA\x00l\x00l\x00 \x00l\x00o\x00a\x00d\x00e\x00d\x00 \x00i\x00m\x00a\x00g\x00e\x00s\x00
+    Image count:\xff\xfe1\x00
+    Scale count:\xff\xfe4\x00
+    Threshold count:\xff\xfe1\x00
+    Select the images to measure:\xff\xfe
+    Include the image rescaling value?:\xff\xfeY\x00e\x00s\x00
+    Calculate blur metrics?:\xff\xfeY\x00e\x00s\x00
+    Spatial scale for blur measurements:\xff\xfe2\x00
+    Spatial scale for blur measurements:\xff\xfe5\x00
+    Spatial scale for blur measurements:\xff\xfe1\x000\x00
+    Spatial scale for blur measurements:\xff\xfe2\x000\x00
+    Calculate saturation metrics?:\xff\xfeY\x00e\x00s\x00
+    Calculate intensity metrics?:\xff\xfeY\x00e\x00s\x00
+    Calculate thresholds?:\xff\xfeN\x00o\x00
+    Use all thresholding methods?:\xff\xfeY\x00e\x00s\x00
+    Select a thresholding method:\xff\xfeO\x00t\x00s\x00u\x00
+    Typical fraction of the image covered by objects:\xff\xfe0\x00.\x001\x00
+    Two-class or three-class thresholding?:\xff\xfeT\x00w\x00o\x00 \x00c\x00l\x00a\x00s\x00s\x00e\x00s\x00
+    Minimize the weighted variance or the entropy?:\xff\xfeW\x00e\x00i\x00g\x00h\x00t\x00e\x00d\x00 \x00v\x00a\x00r\x00i\x00a\x00n\x00c\x00e\x00
+    Assign pixels in the middle intensity class to the foreground or the background?:\xff\xfeF\x00o\x00r\x00e\x00g\x00r\x00o\x00u\x00n\x00d\x00
+
+MeasureImageQuality:[module_num:3|svn_version:\'Unknown\'|variable_revision_number:5|show_window:False|notes:\x5B\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
+    Calculate metrics for which images?:\xff\xfeS\x00e\x00l\x00e\x00c\x00t\x00.\x00.\x00.\x00
+    Image count:\xff\xfe2\x00
+    Scale count:\xff\xfe1\x00
+    Threshold count:\xff\xfe1\x00
+    Scale count:\xff\xfe1\x00
+    Threshold count:\xff\xfe1\x00
+    Select the images to measure:\xff\xfeO\x00r\x00i\x00g\x00D\x00N\x00A\x00
+    Include the image rescaling value?:\xff\xfeN\x00o\x00
+    Calculate blur metrics?:\xff\xfeN\x00o\x00
+    Spatial scale for blur measurements:\xff\xfe2\x000\x00
+    Calculate saturation metrics?:\xff\xfeN\x00o\x00
+    Calculate intensity metrics?:\xff\xfeN\x00o\x00
+    Calculate thresholds?:\xff\xfeY\x00e\x00s\x00
+    Use all thresholding methods?:\xff\xfeN\x00o\x00
+    Select a thresholding method:\xff\xfeO\x00t\x00s\x00u\x00
+    Typical fraction of the image covered by objects:\xff\xfe0\x00.\x001\x00
+    Two-class or three-class thresholding?:\xff\xfeT\x00w\x00o\x00 \x00c\x00l\x00a\x00s\x00s\x00e\x00s\x00
+    Minimize the weighted variance or the entropy?:\xff\xfeW\x00e\x00i\x00g\x00h\x00t\x00e\x00d\x00 \x00v\x00a\x00r\x00i\x00a\x00n\x00c\x00e\x00
+    Assign pixels in the middle intensity class to the foreground or the background?:\xff\xfeB\x00a\x00c\x00k\x00g\x00r\x00o\x00u\x00n\x00d\x00
+    Select the images to measure:\xff\xfeO\x00r\x00i\x00g\x00N\x00u\x00c\x00l\x00e\x00o\x00l\x00i\x00
+    Include the image rescaling value?:\xff\xfeN\x00o\x00
+    Calculate blur metrics?:\xff\xfeN\x00o\x00
+    Spatial scale for blur measurements:\xff\xfe2\x000\x00
+    Calculate saturation metrics?:\xff\xfeN\x00o\x00
+    Calculate intensity metrics?:\xff\xfeN\x00o\x00
+    Calculate thresholds?:\xff\xfeY\x00e\x00s\x00
+    Use all thresholding methods?:\xff\xfeN\x00o\x00
+    Select a thresholding method:\xff\xfeO\x00t\x00s\x00u\x00
+    Typical fraction of the image covered by objects:\xff\xfe0\x00.\x001\x00
+    Two-class or three-class thresholding?:\xff\xfeT\x00h\x00r\x00e\x00e\x00 \x00c\x00l\x00a\x00s\x00s\x00e\x00s\x00
+    Minimize the weighted variance or the entropy?:\xff\xfeW\x00e\x00i\x00g\x00h\x00t\x00e\x00d\x00 \x00v\x00a\x00r\x00i\x00a\x00n\x00c\x00e\x00
+    Assign pixels in the middle intensity class to the foreground or the background?:\xff\xfeF\x00o\x00r\x00e\x00g\x00r\x00o\x00u\x00n\x00d\x00
+
+ExportToDatabase:[module_num:4|svn_version:\'Unknown\'|variable_revision_number:27|show_window:True|notes:\x5B\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
+    Database type:\xff\xfeM\x00y\x00S\x00Q\x00L\x00 \x00/\x00 \x00C\x00S\x00V\x00
+    Database name:\xff\xfet\x00e\x00s\x00t\x00
+    Add a prefix to table names?:\xff\xfeY\x00e\x00s\x00
+    Table prefix:\xff\xfet\x00e\x00s\x00t\x00_\x00
+    SQL file prefix:\xff\xfet\x00e\x00s\x00t\x00_\x00
+    Output file location:\xff\xfeD\x00e\x00f\x00a\x00u\x00l\x00t\x00 \x00O\x00u\x00t\x00p\x00u\x00t\x00 \x00F\x00o\x00l\x00d\x00e\x00r\x00\x7C\x00
+    Create a CellProfiler Analyst properties file?:\xff\xfeN\x00o\x00
+    Database host:\xff\xfe
+    Username:\xff\xfe
+    Password:\xff\xfe
+    Name the SQLite database file:\xff\xfeD\x00e\x00f\x00a\x00u\x00l\x00t\x00D\x00B\x00.\x00d\x00b\x00
+    Calculate the per-image mean values of object measurements?:\xff\xfeN\x00o\x00
+    Calculate the per-image median values of object measurements?:\xff\xfeN\x00o\x00
+    Calculate the per-image standard deviation values of object measurements?:\xff\xfeN\x00o\x00
+    Calculate the per-well mean values of object measurements?:\xff\xfeN\x00o\x00
+    Calculate the per-well median values of object measurements?:\xff\xfeN\x00o\x00
+    Calculate the per-well standard deviation values of object measurements?:\xff\xfeN\x00o\x00
+    Export measurements for all objects to the database?:\xff\xfeA\x00l\x00l\x00
+    Select the objects:\xff\xfe
+    Maximum # of characters in a column name:\xff\xfe6\x004\x00
+    Create one table per object, a single object table or a single object view?:\xff\xfeS\x00i\x00n\x00g\x00l\x00e\x00 \x00o\x00b\x00j\x00e\x00c\x00t\x00 \x00t\x00a\x00b\x00l\x00e\x00
+    Enter an image url prepend if you plan to access your files via http:\xff\xfe
+    Write image thumbnails directly to the database?:\xff\xfeN\x00o\x00
+    Select the images for which you want to save thumbnails:\xff\xfe
+    Auto-scale thumbnail pixel intensities?:\xff\xfeY\x00e\x00s\x00
+    Select the plate type:\xff\xfeN\x00o\x00n\x00e\x00
+    Select the plate metadata:\xff\xfeN\x00o\x00n\x00e\x00
+    Select the well metadata:\xff\xfeN\x00o\x00n\x00e\x00
+    Include information for all images, using default values?:\xff\xfeY\x00e\x00s\x00
+    Properties image group count:\xff\xfe1\x00
+    Properties group field count:\xff\xfe1\x00
+    Properties filter field count:\xff\xfe0\x00
+    Workspace measurement count:\xff\xfe1\x00
+    Experiment name:\xff\xfet\x00e\x00s\x00t\x00
+    Which objects should be used for locations?:\xff\xfeN\x00o\x00n\x00e\x00
+    Enter a phenotype class table name if using the Classifier tool in CellProfiler Analyst:\xff\xfe
+    Export object relationships?:\xff\xfeN\x00o\x00
+    Overwrite without warning?:\xff\xfeN\x00e\x00v\x00e\x00r\x00
+    Access CellProfiler Analyst images via URL?:\xff\xfeN\x00o\x00
+    Select the classification type:\xff\xfeO\x00b\x00j\x00e\x00c\x00t\x00
+    Select an image to include:\xff\xfeN\x00o\x00n\x00e\x00
+    Use the image name for the display?:\xff\xfeY\x00e\x00s\x00
+    Image name:\xff\xfeC\x00h\x00a\x00n\x00n\x00e\x00l\x001\x00
+    Channel color:\xff\xfer\x00e\x00d\x00
+    Do you want to add group fields?:\xff\xfeN\x00o\x00
+    Enter the name of the group:\xff\xfe
+    Enter the per-image columns which define the group, separated by commas:\xff\xfeI\x00m\x00a\x00g\x00e\x00N\x00u\x00m\x00b\x00e\x00r\x00,\x00 \x00I\x00m\x00a\x00g\x00e\x00_\x00M\x00e\x00t\x00a\x00d\x00a\x00t\x00a\x00_\x00P\x00l\x00a\x00t\x00e\x00,\x00 \x00I\x00m\x00a\x00g\x00e\x00_\x00M\x00e\x00t\x00a\x00d\x00a\x00t\x00a\x00_\x00W\x00e\x00l\x00l\x00
+    Do you want to add filter fields?:\xff\xfeN\x00o\x00
+    Automatically create a filter for each plate?:\xff\xfeN\x00o\x00
+    Create a CellProfiler Analyst workspace file?:\xff\xfeN\x00o\x00
+    Select the measurement display tool:\xff\xfeS\x00c\x00a\x00t\x00t\x00e\x00r\x00P\x00l\x00o\x00t\x00
+    Type of measurement to plot on the X-axis:\xff\xfeI\x00m\x00a\x00g\x00e\x00
+    Enter the object name:\xff\xfeN\x00o\x00n\x00e\x00
+    Select the X-axis measurement:\xff\xfeN\x00o\x00n\x00e\x00
+    Select the X-axis index:\xff\xfeI\x00m\x00a\x00g\x00e\x00N\x00u\x00m\x00b\x00e\x00r\x00
+    Type of measurement to plot on the Y-axis:\xff\xfeI\x00m\x00a\x00g\x00e\x00
+    Enter the object name:\xff\xfeN\x00o\x00n\x00e\x00
+    Select the Y-axis measurement:\xff\xfeN\x00o\x00n\x00e\x00
+    Select the Y-axis index:\xff\xfeI\x00m\x00a\x00g\x00e\x00N\x00u\x00m\x00b\x00e\x00r\x00
