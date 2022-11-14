@@ -1,4 +1,4 @@
-### BEM 04122021 batch aggregate cell painting data - compressed run2
+### Script for median aggregating cell painting features across all cells in a given well
 
 import os
 import sqlite3
@@ -164,4 +164,10 @@ if __name__ == '__main__':
     platemaps = 'compressed_screen_run3'
     platemap_dir = 'platemap_run3/'
 
-    Batch_Aggregate(path_to_data, QC_fail, platemaps, platemap_dir, 'compressed_screen_run3', '06232021')
+    # UPDATE for a given run
+    run = 'compressed_screen_run3'
+
+    # UPDATE to the date you run this
+    date = '06232021'
+
+    Batch_Aggregate(path_to_data, QC_fail, platemaps, platemap_dir, run, date)
