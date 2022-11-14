@@ -1,7 +1,7 @@
-0_median_aggreate_cell_painting_data.py -> By well median aggregation
+**0_median_aggreate_cell_painting_data.py**: By well median aggregation
     - Median aggregates cell painting data across cells in a given well
 
-1_scale_features.ipynb -> Robust scaling of cell painting features
+**1_scale_features.ipynb**: Robust scaling of cell painting features
     On a per batch basis
     remove EMPTY wells and DMSO, TREAT wells < 50 cells
     drop uninformative features (same value, 0s)
@@ -10,7 +10,7 @@
     scale each feature with sklearn RobustScaler
     -OR- Perform transformation of features with sklearn PowerTransformer (Yeo-Johnson)
 
-2_CV_Effect_filtering.ipynb -> Removes redundant/correlated cell painting features by selecting for informative features 
+**2_CV_Effect_filtering.ipynb**: Removes redundant/correlated cell painting features by selecting for informative features 
     Aim is to select features with minimal noise (control variance) and maximal information (treat variance) regardless of imaging batch
 
     divide the dataset into the 3 analyses:
