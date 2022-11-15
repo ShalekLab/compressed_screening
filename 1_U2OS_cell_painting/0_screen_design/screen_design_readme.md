@@ -1,0 +1,16 @@
+This directory contains example code for designing a compressed screen. It is currently bespoke to our screening setup, but many of the function we used will be helpful to a user looking to conduct a compressed screen.
+
+**1_make_random_pools.py**: Script for making random pools for a given compression screen
+    - Initialize drug function makes the pools
+        - Input the compressed scheme design
+        - Outputs .npy file containing numpy array of the pool design
+
+**2_picklist_design.py**: Example of designing a compressed screen, makes filesfor running a compressed screens with an Echo acoustic liquid handler.With an Echo, need to tell it to flies drops from source plates to destination plates
+- Inputs
+    - Drug library plate layout csv
+    - Npy files of the random pool layour from make_random_pools.py
+- Outputs for each desintation plate:
+- picklist: csv input to Echo, tells it what drops come from  which source plates and go to which wells in destination plate
+    - Metadata: csv that records for each well in the desintation plate what the dose, time, comrpession, replicates, etc are
+    - Well_drug_dict: dictionary describing wells in destation plate, keys are wells, values are lists of the perturbations in that well
+    - Pool_key: intermediate file used for building above, not used in downstream analysis
