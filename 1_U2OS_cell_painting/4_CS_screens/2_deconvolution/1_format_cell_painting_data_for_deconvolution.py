@@ -211,6 +211,9 @@ def ingest_cell_painting(run_name,landmarks, controls,metadata,features,metadata
         for well in sample_perturbation_dicts[plate]:
             id_to_use = run_name +"_"+plate+"_" + well
             design_matrix.loc[id_to_use,sample_perturbation_dicts[plate][well]] = 1
+
+    # Add DMSO to the design matrix
+    design_matrix['DMSO'] = 1
             
     return metadata, features, design_matrix
     
@@ -220,116 +223,39 @@ def ingest_cell_painting(run_name,landmarks, controls,metadata,features,metadata
 
 def main():
 
-    # Example code use cases:
-
     ################################################################################################
-    # Case 1: Ingesting the data straight out of the compressed screens
+    # Example code use case:
+    # Ingesting compressed screen run 1
+    ################################################################################################
+    # Ingesting the data straight out of the compressed screens
     # Useful sort of setup to use when ingesting one screen at a time
     # Could be useful for importing any future cell painting data
     ################################################################################################
 
-    ##########################
-    # Example: Compressed screen run 1
-    ##########################
-
     # Specifying the run name, landmarks and controls
- #    run = "CS_run1"
-	# LM = ['Daunorubicin','Doxorubicin','Fluvastatin','Mycophenolic Acid',
- #      'Riluzole','Ticlopidine','Tropicamide','Vinblastine Sulfate']
- #    controls =['DMSO']
+    run = "CS_run1"
+	LM = ['Daunorubicin','Doxorubicin','Fluvastatin','Mycophenolic Acid',
+      'Riluzole','Ticlopidine','Tropicamide','Vinblastine Sulfate']
+    controls =['DMSO']
 	
 
- #    # Specifying the file path for the metadata and features pandas table
- #    data= pd.read_csv('/Users/connerkummerlowe/Dropbox (MIT)/lets_do_drugs//BEM/CellPainting_compressed_screen/3_Norm_FeatureSelection/2_Feature_Selection_re-run1+2/Output/04122021_variFeat_compressed_screen_run1_STAN_ALLcor_feature_table.gz')
- #    metadata, features = load_metadata_features_cell_painting(data,LM,controls)
+    # Specifying the file path for the metadata and features pandas table
+    data= pd.read_csv('/Users/connerkummerlowe/Dropbox (MIT)/lets_do_drugs//BEM/CellPainting_compressed_screen/3_Norm_FeatureSelection/2_Feature_Selection_re-run1+2/Output/04122021_variFeat_compressed_screen_run1_STAN_ALLcor_feature_table.gz')
+    metadata, features = load_metadata_features_cell_painting(data,LM,controls)
 
- #    # Specifying the well drug dictionary path
- #    well_drug_dict_dir = '/Users/connerkummerlowe/Dropbox (MIT)/lets_do_drugs//BEM/CellPainting_compressed_screen/4_Analysis//0_RAW_data/plate_dicts_run1/'
+    # Specifying the well drug dictionary path
+    well_drug_dict_dir = '/Users/connerkummerlowe/Dropbox (MIT)/lets_do_drugs//BEM/CellPainting_compressed_screen/4_Analysis//0_RAW_data/plate_dicts_run1/'
 	
 
- #    metadata, features, design_matrix = ingest_cell_painting(run_name=run,landmarks=LM,controls=controls,metadata=metadata,features=features,
- #                                                        metadata_columns_for_unique_ids=['Metadata_run','Metadata_Plate','Metadata_Well'],
- #                                                        sample_perturbation_dict_path=well_drug_dict_dir)
+    metadata, features, design_matrix = ingest_cell_painting(run_name=run,landmarks=LM,controls=controls,metadata=metadata,features=features,
+                                                        metadata_columns_for_unique_ids=['Metadata_run','Metadata_Plate','Metadata_Well'],
+                                                        sample_perturbation_dict_path=well_drug_dict_dir)
 	
 
-    # Saving the resulting files
-    # metadata.to_csv("")
-    # features.to_csv("")
-    # design_matrix.to_csv("")
-
-
-    ################################################################################################
-    # Case 2: Running on the data all cell painting data, going to go with this from here on
-    ################################################################################################
-
-    # Loading in the dataset with all of the cell painting runs in it
-    data_preprocessing_method = "denoised_data" #use this to specify the preprocessing that's been used
-    data = pd.read_csv("~/Dropbox (MIT)/lets_do_drugs/cell_painting_data_lock/2_median_aggregated/08122021_QC_both_all_data_feature_table.gz")
-
-
-    LM = ['Daunorubicin','Doxorubicin','Fluvastatin','Mycophenolic Acid',
-            'Riluzole','Ticlopidine','Tropicamide','Vinblastine Sulfate']
-    controls = ['DMSO']
-
-    # Splitting data into metadata nd features
-    all_metadata, all_features = load_metadata_features_cell_painting(data,LM,controls)
-
-    # Renaming the plate names to be more consistent with my previous setup
-    for plate in np.unique(all_metadata['Metadata_Plate'].values):
-        for run in np.unique(all_metadata['Metadata_run'].values):
-            if run in plate:
-                all_metadata['Metadata_Plate'] = all_metadata['Metadata_Plate'].replace(plate,plate.replace(run+"_",""))
-
-    # Setting the file paths for all of the well drug dict dictionaries
-    CS_run1_well_drug_dict_dir = '/Users/connerkummerlowe/Dropbox (MIT)/lets_do_drugs//BEM/CellPainting_compressed_screen/4_Analysis//0_RAW_data/plate_dicts_run1/'
-    CS_run2_well_drug_dict_dir = '/Users/connerkummerlowe//Github/lets_do_drugs/cell_painting_screen_design/Picklist design (Second screen)/well_drug_dicts/'
-    CS_run3_well_drug_dict_dir = '/Users/connerkummerlowe/Github/lets_do_drugs/Picklist design (Third Screen)/well_drug_dicts_without_ions/'
-
-    GT_run1_batch1_well_drug_dict_dir = '/Users/connerkummerlowe/GitHub/lets_do_drugs/Picklist design (Ground Truth run1 batch1)/well_drug_dicts/'
-    GT_run1_batch2_well_drug_dict_dir = '/Users/connerkummerlowe/GitHub/lets_do_drugs/Picklist design (Ground Truth run1 batch 2)/well_drug_dicts/'
-    GT_run2_well_drug_dict_dir = '/Users/connerkummerlowe/GitHub/lets_do_drugs/Picklist design (Ground truth run2)/well_drug_dicts/'
-
-    
-    well_drug_dict_dir_map = {"CS_run1":CS_run1_well_drug_dict_dir,
-                              "CS_run2":CS_run2_well_drug_dict_dir,
-                              "CS_run3":CS_run3_well_drug_dict_dir,
-                              "GT_run1_batch1":GT_run1_batch1_well_drug_dict_dir,
-                              "GT_run1_batch2":GT_run1_batch2_well_drug_dict_dir,
-                              "GT_run2":GT_run2_well_drug_dict_dir}
-
-    controls_map = {"CS_run1":['DMSO'],
-                              "CS_run2":['DMSO'],
-                              "CS_run3":['DMSO'],
-                              "GT_run1_batch1":['DMSO'],
-                              "GT_run1_batch2":['DMSO'],
-                              "GT_run2":['DMSO']}
-
-    landmarks_map = {"CS_run1":LM,
-                              "CS_run2":LM,
-                              "CS_run3":LM,
-                              "GT_run1_batch1":[],
-                              "GT_run1_batch2":[],
-                              "GT_run2":[]}
-
-
-    # Loop through each of the cell painting runs and ingest the data into a 
-        # metadata csv
-        # features csv
-        # design matrix csv
-    for run in np.unique(all_metadata['Metadata_run'].values):
-        well_drug_dict_dir = well_drug_dict_dir_map[run]
-        landmarks = landmarks_map[run]
-        controls = controls_map[run]
-        metadata = all_metadata.loc[all_metadata.Metadata_run==run,:]
-        features = all_features.loc[all_metadata.Metadata_run==run,:]
-        metadata, features, design_matrix = ingest_cell_painting(run_name=run,landmarks=landmarks,controls=controls,metadata=metadata,features=features,
-                                                            metadata_columns_for_unique_ids=['Metadata_run','Metadata_Plate','Metadata_Well'],
-                                                            sample_perturbation_dict_path=well_drug_dict_dir)
-
-        metadata.to_csv(run+"_" + data_preprocessing_method+"_metadata.csv")
-        features.to_csv(run+"_" + data_preprocessing_method+"_features.csv")
-        design_matrix.to_csv(run+"_" + data_preprocessing_method+"_design_matrix.csv")  
-     
+    #Saving the resulting files
+    metadata.to_csv("CS_run1_metadata.csv")
+    features.to_csv("CS_run1_features.csv")
+    design_matrix.to_csv("CS_run1_design_matrix.csv")
 
 
 if __name__ == '__main__':
