@@ -1,0 +1,271 @@
+---
+title: "Making scatter plots colored by GT leiden group"
+output: html_notebook
+---
+
+
+```{r}
+library(tidyverse)
+library(cowplot)
+```
+
+
+
+ # Making RDS file for ben
+```{r}
+permute = 0.01
+drug_cluster_colors = c('#EFAD81','#EF6F18',
+                   '#844E27','#6153A3','#C5E2BC','#437548',
+                   '#8F9E35',
+                   '#7AC4B9','#12544D',
+                   '#CCA754')
+
+  combined_metrics = read.csv(paste0("regression_summary_stats/regression_metrics_permute_",permute,"_Dec102021.csv"))
+  summary_stats = read.csv(paste0("regression_summary_stats/summary_stats_from_all_reg_sig_coef_permute_",permute,"_Dec102021.csv"))
+
+
+run = 'CS_run1'
+compression_methods = read.csv(paste0(run,"_compression_methods.csv"))
+compression = 2
+replicates = 5
+scheme = 'random'
+cs_metrics = combined_metrics %>% filter(Metadata_run==run) %>% 
+    filter(Metadata_compresion==compression) %>% 
+    filter(Metadata_replicates==replicates) %>%
+    filter(Metadata_scheme == scheme)
+cs_metrics$gt_leiden[cs_metrics$gt_leiden==""] = "Not sig"
+      
+saveRDS(cs_metrics,"csrun1_2x5_effect_metrics.rds")
+
+run = 'CS_run2'
+compression_methods = read.csv(paste0(run,"_compression_methods.csv"))
+compression = 2
+replicates = 5
+scheme = 'random'
+cs_metrics = combined_metrics %>% filter(Metadata_run==run) %>% 
+    filter(Metadata_compresion==compression) %>% 
+    filter(Metadata_replicates==replicates) %>%
+    filter(Metadata_scheme == scheme)
+cs_metrics$gt_leiden[cs_metrics$gt_leiden==""] = "Not sig"
+      
+saveRDS(cs_metrics,"csrun2_2x5_effect_metrics.rds")
+```
+
+
+
+
+```{r}
+for(permute in c(0.05,0.01,0.001)){
+  drug_cluster_colors = c('#EFAD81','#EF6F18',
+                   '#844E27','#6153A3','#C5E2BC','#437548',
+                   '#8F9E35',
+                   '#7AC4B9','#12544D',
+                   '#CCA754')
+
+  combined_metrics = read.csv(paste0("regression_summary_stats/regression_metrics_permute_",permute,"_Dec102021.csv"))
+  summary_stats = read.csv(paste0("regression_summary_stats/summary_stats_from_all_reg_sig_coef_permute_",permute,"_Dec102021.csv"))
+  
+  
+  runs = c("CS_run1",'CS_run2','CS_run3')
+  for(run in runs){
+    compression_methods = read.csv(paste0(run,"_compression_methods.csv"))
+    for(i in 1:nrow(compression_methods)){
+    
+      compression = compression_methods$Metadata_compression[i]
+      replicates = compression_methods$Metadata_replicates[i]
+      scheme = compression_methods$Metadata_perturbation[i]
+      
+      cs_metrics = combined_metrics %>% filter(Metadata_run==run) %>% 
+          filter(Metadata_compresion==compression) %>% 
+          filter(Metadata_replicates==replicates) %>%
+          filter(Metadata_scheme == scheme)
+      cs_metrics$gt_leiden[cs_metrics$gt_leiden==""] = "Not sig"
+      
+      cs_summary = summary_stats %>% filter(Metadata_run==run) %>% 
+          filter(Metadata_compression==compression) %>% 
+          filter(Metadata_replicates==replicates) %>%
+          filter(Metadata_scheme == scheme)
+      
+      ordered_gt_leiden = c("Not sig","2-lo", "2-hi","3","4","5","6","6-8", "7-lo", "7-hi",   "8" )
+      cs_metrics$gt_leiden = factor(cs_metrics$gt_leiden,
+                                    levels=ordered_gt_leiden)
+      cs_metrics_sig_both = cs_metrics[(cs_metrics$gt_leiden!="Not sig")&(cs_metrics$permute_reg_l1_norm > 0),]
+      cs_metrics_not_sig_CS_sig_GT = cs_metrics[(cs_metrics$gt_leiden!="Not sig")&(cs_metrics$permute_reg_l1_norm == 0),]
+      cs_metrics_not_sig_CS_not_GT = cs_metrics[(cs_metrics$gt_leiden=="Not sig")&(cs_metrics$permute_reg_l1_norm == 0),]
+      cs_metrics_sig_CS_not_GT = cs_metrics[(cs_metrics$gt_leiden=="Not sig")&(cs_metrics$permute_reg_l1_norm > 0),]
+      
+      temp_colors = drug_cluster_colors[ordered_gt_leiden[2:length(ordered_gt_leiden)] %in% cs_metrics_sig_both$gt_leiden]
+      
+      pdf(paste0("~/Dropbox (MIT)/Compressed Screening/Latest Draft/FIGURES/scatterplots/permute_",permute,"/",
+      run,"_",compression,"X_",replicates,"r_",scheme,"_reg_permute_",permute,"_mahala_l1_scatter.pdf"),
+      useDingbats = F,width = 1.75,height=1.75)
+      print(ggplot(cs_metrics_sig_both,aes(x=gt_mahalanobis,y=permute_reg_l1_scaled,color=gt_leiden)) +
+        geom_point(data=cs_metrics_not_sig_CS_not_GT,aes(x=gt_mahalanobis,y=permute_reg_l1_scaled),color="grey")+
+          geom_point(data=cs_metrics_not_sig_CS_sig_GT,aes(x=gt_mahalanobis,y=permute_reg_l1_scaled),color="red")+
+          geom_point(data=cs_metrics_sig_CS_not_GT,aes(x=gt_mahalanobis,y=permute_reg_l1_scaled),color="black")+
+          geom_point(data=cs_metrics_sig_both,aes(x=gt_mahalanobis,y=permute_reg_l1_scaled,color=gt_leiden),size=2)+
+          scale_color_manual(values=temp_colors) +
+          theme_cowplot() +ylim(0,1)+
+          labs(color="Ground truth\nperturbation\ncluster") +
+          xlab("GT: Mahalanobis")+
+          ylab("CS: L1 norm") +
+          theme(axis.title = element_text(size=10),axis.text = element_text(size=8),
+                legend.title = element_text(size=10),legend.text = element_text(size=8))+
+        geom_hline(yintercept = cs_summary$top_hit_threshold,linetype="dashed",color="grey")) 
+    dev.off()
+    
+        pdf(paste0("~/Dropbox (MIT)/Compressed Screening/Latest Draft/FIGURES/Fig2/Fig2_old/scatterplots/permute_",permute,"/",
+      run,"_",compression,"X_",replicates,"r_",scheme,"_reg_permute_",permute,"_mahala_l1_scatter_no_legend.pdf"),
+      useDingbats = F,width = 1.75,height=1.75)
+      print(ggplot(cs_metrics_sig_both,aes(x=gt_mahalanobis,y=permute_reg_l1_scaled,color=gt_leiden)) +
+        geom_point(data=cs_metrics_not_sig_CS_not_GT,aes(x=gt_mahalanobis,y=permute_reg_l1_scaled),color="grey")+
+          geom_point(data=cs_metrics_not_sig_CS_sig_GT,aes(x=gt_mahalanobis,y=permute_reg_l1_scaled),color="#1c75bc")+
+          geom_point(data=cs_metrics_sig_CS_not_GT,aes(x=gt_mahalanobis,y=permute_reg_l1_scaled),color="black")+
+          geom_point(data=cs_metrics_sig_both,aes(x=gt_mahalanobis,y=permute_reg_l1_scaled,color=gt_leiden),size=2)+
+          scale_color_manual(values=temp_colors) +
+          theme_cowplot() +ylim(0,1)+
+          labs(color="Ground truth\nperturbation\ncluster") +
+          xlab("GT: Mahalanobis")+
+          ylab("CS: L1 norm") +
+          theme(axis.title = element_text(size=10),axis.text = element_text(size=8),
+                legend.title = element_text(size=10),legend.text = element_text(size=8),legend.position = "None")+
+        geom_hline(yintercept = cs_summary$top_hit_threshold,linetype="dashed",color="grey")) 
+    dev.off()
+      }
+  }
+
+}
+
+
+```
+
+```{r}
+permute = 0.01
+drug_cluster_colors = c('#EFAD81','#EF6F18',
+                   '#844E27','#6153A3','#C5E2BC','#437548',
+                   '#8F9E35',
+                   '#7AC4B9','#12544D',
+                   '#CCA754')
+
+combined_metrics = read.csv(paste0("regression_summary_stats/regression_metrics_permute_",permute,"_Dec102021.csv"))
+summary_stats = read.csv(paste0("regression_summary_stats/summary_stats_from_all_reg_sig_coef_permute_",permute,"_Dec102021.csv"))
+
+
+runs = c("CS_run1",'CS_run2','CS_run3')
+for(run in runs){
+  compression_methods = read.csv(paste0(run,"_compression_methods.csv"))
+  for(i in 1:nrow(compression_methods)){
+  
+    compression = compression_methods$Metadata_compression[i]
+    replicates = compression_methods$Metadata_replicates[i]
+    scheme = compression_methods$Metadata_perturbation[i]
+    
+    cs_metrics = combined_metrics %>% filter(Metadata_run==run) %>% 
+        filter(Metadata_compresion==compression) %>% 
+        filter(Metadata_replicates==replicates) %>%
+        filter(Metadata_scheme == scheme)
+    cs_metrics$gt_leiden[cs_metrics$gt_leiden==""] = "Not sig"
+    
+    cs_summary = summary_stats %>% filter(Metadata_run==run) %>% 
+        filter(Metadata_compression==compression) %>% 
+        filter(Metadata_replicates==replicates) %>%
+        filter(Metadata_scheme == scheme)
+    
+    ordered_gt_leiden = c("Not sig","2-lo", "2-hi","3","4","5","6","6-8", "7-lo", "7-hi",   "8" )
+    cs_metrics$gt_leiden = factor(cs_metrics$gt_leiden,
+                                  levels=ordered_gt_leiden)
+    cs_metrics_sig_both = cs_metrics[(cs_metrics$gt_leiden!="Not sig")&(cs_metrics$permute_reg_l1_norm > 0),]
+    cs_metrics_not_sig_CS_sig_GT = cs_metrics[(cs_metrics$gt_leiden!="Not sig")&(cs_metrics$permute_reg_l1_norm == 0),]
+    cs_metrics_not_sig_CS_not_GT = cs_metrics[(cs_metrics$gt_leiden=="Not sig")&(cs_metrics$permute_reg_l1_norm == 0),]
+    cs_metrics_sig_CS_not_GT = cs_metrics[(cs_metrics$gt_leiden=="Not sig")&(cs_metrics$permute_reg_l1_norm > 0),]
+    
+    temp_colors = drug_cluster_colors[ordered_gt_leiden[2:length(ordered_gt_leiden)] %in% cs_metrics_sig_both$gt_leiden]
+    
+    pdf(paste0("~/Dropbox (MIT)/Compressed Screening/Latest Draft/FIGURES/Fig2/Fig2_old/scatterplots/permute_",permute,"/",
+    run,"_",compression,"X_",replicates,"r_",scheme,"_reg_permute_",permute,"_mahala_l1_scatter.pdf"),
+    useDingbats = F,width = 5,height=3.5)
+    print(ggplot(cs_metrics_sig_both,aes(x=gt_mahalanobis,y=permute_reg_l1_scaled,color=gt_leiden)) +
+      geom_point(data=cs_metrics_not_sig_CS_not_GT,aes(x=gt_mahalanobis,y=permute_reg_l1_scaled),color="grey")+
+        geom_point(data=cs_metrics_not_sig_CS_sig_GT,aes(x=gt_mahalanobis,y=permute_reg_l1_scaled),color="red")+
+        geom_point(data=cs_metrics_sig_CS_not_GT,aes(x=gt_mahalanobis,y=permute_reg_l1_scaled),color="black",size=3)+
+        geom_point(data=cs_metrics_sig_both,aes(x=gt_mahalanobis,y=permute_reg_l1_scaled,color=gt_leiden),size=3)+
+        scale_color_manual(values=temp_colors) +
+        theme_cowplot() +ylim(0,1)+
+        labs(color="Ground truth\nperturbation\ncluster") +
+        xlab("Ground truth Mahalanobis distance")+
+        ylab("L1 norm of regression coeficients") +
+        theme(axis.title = element_text(size=10),axis.text = element_text(size=8),
+              legend.title = element_text(size=10),legend.text = element_text(size=8))+
+      geom_hline(yintercept = cs_summary$top_hit_threshold,linetype="dashed",color="grey")) 
+  dev.off()
+    }
+}
+
+```
+
+```{r}
+permute = 0.05
+drug_cluster_colors = c('#EFAD81','#EF6F18',
+                   '#844E27','#6153A3','#C5E2BC','#437548',
+                   '#8F9E35',
+                   '#7AC4B9','#12544D',
+                   '#CCA754')
+
+combined_metrics = read.csv(paste0("regression_summary_stats/regression_metrics_permute_",permute,"_Dec102021.csv"))
+summary_stats = read.csv(paste0("regression_summary_stats/summary_stats_from_all_reg_sig_coef_permute_",permute,"_Dec102021.csv"))
+
+
+runs = c("CS_run1",'CS_run2','CS_run3')
+for(run in runs){
+  compression_methods = read.csv(paste0(run,"_compression_methods.csv"))
+  for(i in 1:nrow(compression_methods)){
+  
+    compression = compression_methods$Metadata_compression[i]
+    replicates = compression_methods$Metadata_replicates[i]
+    scheme = compression_methods$Metadata_perturbation[i]
+    
+    cs_metrics = combined_metrics %>% filter(Metadata_run==run) %>% 
+        filter(Metadata_compresion==compression) %>% 
+        filter(Metadata_replicates==replicates) %>%
+        filter(Metadata_scheme == scheme)
+    cs_metrics$gt_leiden[cs_metrics$gt_leiden==""] = "Not sig"
+    
+    cs_summary = summary_stats %>% filter(Metadata_run==run) %>% 
+        filter(Metadata_compression==compression) %>% 
+        filter(Metadata_replicates==replicates) %>%
+        filter(Metadata_scheme == scheme)
+    
+    ordered_gt_leiden = c("Not sig","2-lo", "2-hi","3","4","5","6","6-8", "7-lo", "7-hi",   "8" )
+    cs_metrics$gt_leiden = factor(cs_metrics$gt_leiden,
+                                  levels=ordered_gt_leiden)
+    cs_metrics_sig_both = cs_metrics[(cs_metrics$gt_leiden!="Not sig")&(cs_metrics$permute_reg_l1_norm > 0),]
+    cs_metrics_not_sig_CS_sig_GT = cs_metrics[(cs_metrics$gt_leiden!="Not sig")&(cs_metrics$permute_reg_l1_norm == 0),]
+    cs_metrics_not_sig_CS_not_GT = cs_metrics[(cs_metrics$gt_leiden=="Not sig")&(cs_metrics$permute_reg_l1_norm == 0),]
+    cs_metrics_sig_CS_not_GT = cs_metrics[(cs_metrics$gt_leiden=="Not sig")&(cs_metrics$permute_reg_l1_norm > 0),]
+    
+    temp_colors = drug_cluster_colors[ordered_gt_leiden[2:length(ordered_gt_leiden)] %in% cs_metrics_sig_both$gt_leiden]
+    
+    pdf(paste0("~/Dropbox (MIT)/Compressed Screening/Latest Draft/FIGURES/Fig2/Fig2_old/scatterplots/permute_",permute,"/",
+    run,"_",compression,"X_",replicates,"r_",scheme,"_reg_permute_",permute,"_mahala_l1_scatter.pdf"),
+    useDingbats = F,width = 5,height=3.5)
+    print(ggplot(cs_metrics_sig_both,aes(x=gt_mahalanobis,y=permute_reg_l1_scaled,color=gt_leiden)) +
+      geom_point(data=cs_metrics_not_sig_CS_not_GT,aes(x=gt_mahalanobis,y=permute_reg_l1_scaled),color="grey")+
+        geom_point(data=cs_metrics_not_sig_CS_sig_GT,aes(x=gt_mahalanobis,y=permute_reg_l1_scaled),color="red")+
+        geom_point(data=cs_metrics_sig_CS_not_GT,aes(x=gt_mahalanobis,y=permute_reg_l1_scaled),color="black",size=3)+
+        geom_point(data=cs_metrics_sig_both,aes(x=gt_mahalanobis,y=permute_reg_l1_scaled,color=gt_leiden),size=3)+
+        scale_color_manual(values=temp_colors) +
+        theme_cowplot() +ylim(0,1)+
+        labs(color="Ground truth\nperturbation\ncluster") +
+        xlab("Ground truth Mahalanobis distance")+
+        ylab("L1 norm of regression coeficients") +
+        theme(axis.title = element_text(size=10),axis.text = element_text(size=8),
+              legend.title = element_text(size=10),legend.text = element_text(size=8))+
+      geom_hline(yintercept = cs_summary$top_hit_threshold,linetype="dashed",color="grey")) 
+  dev.off()
+    }
+}
+
+```
+
+
+
