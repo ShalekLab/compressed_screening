@@ -1,3 +1,10 @@
+
+# Script for running regularized linear regression deconvolution on cell painting datasets
+
+# Loops through all of the compressed screens, using the data in the format ingested in previous script
+    # Calls functions from CompressedScreen.py & linear_deconvolution.py scripts to run deconvolution
+
+
 import scanpy as sc
 import os, glob
 import sys
@@ -6,13 +13,10 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-import umap
 import random
 import pickle
 import multiprocess as mp
 from itertools import repeat
-from sklearn.decomposition import PCA
-from sklearn.utils import shuffle
 from sklearn import linear_model
 from ingest_screening_data import *
 from CompressedScreen import *
@@ -26,10 +30,8 @@ def main():
     #loop over preprocessing
     input_dir = "../../../cell_painting_data_lock/4_CS_OBJECTS_median_aggregated/"
     metadata_files= glob.glob(input_dir+"*metadata.csv")
-    # runs=['CS_run1','CS_run2','CS_run3']
-    runs=['CS_run2','CS_run3']
+    runs=['CS_run1','CS_run2','CS_run3']
     for run in runs:
-        # for layer in ['PCH','raw']:
         for layer in ['raw']:
             print(run+"_"+layer)
             # Find the right metadata file for this run & layer
@@ -47,7 +49,6 @@ def main():
             outdir=os.path.join('~/Dropbox (MIT)/lets_do_drugs/CK/compressed_cell_painting_screen_analysis/regression_deconvolution_December2021/decon_out',"_".join(metadata_file.split("/")[-1].split("metadata.csv")[0].split("_")[2:])+layer+'_decon_out/')
 
             if run!='CS_run3':
-        #         optimization_schemes = ['random','weighted_cosine','phenograph_all','mahalanobis']
                 optimization_schemes = ['random']
                 pooled_meta = metadata.loc[np.isin(metadata['Metadata_perturbation'],optimization_schemes)]
             else:

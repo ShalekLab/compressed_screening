@@ -1,14 +1,13 @@
+# Helper script containing functions for running regularized regression deconvolution with permutation testing
+
+
 import numpy as np
 import pandas as pd
-from sklearn.manifold import TSNE
-import umap
-import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
 import os
 import sys
 import random
-import pickle
 import multiprocess as mp
 from itertools import repeat
 from sklearn.utils import shuffle

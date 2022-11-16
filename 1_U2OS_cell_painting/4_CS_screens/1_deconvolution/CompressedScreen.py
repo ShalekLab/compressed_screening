@@ -1,4 +1,4 @@
-# writing a class for our compressed screening data
+# Helper script containing a compressed screenign class used for deconvolution
 import sys
 import pandas as pd
 import pickle as pl
