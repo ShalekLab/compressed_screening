@@ -1,6 +1,7 @@
 Workflow for analyzing the ground truth cell painting data
 
-**1_dose_time_coef_of_variatoin_calculations.ipynb**: For choosing dose and time point for cell painting experiments
+**1_dose_time_coef_of_variatoin_calculations.ipynb**: (Python)
+For choosing dose and time point for cell painting experiments
 - Analysis of the 2 replicates 3 doses (0.1,1, 10 uM) X 3 time points (6 hours, 24 hours, 48 hours) dataset
 - For each time point
     - calculates the effect of compounds relative to DMSO (measured by Mahalanobis distance
@@ -9,7 +10,8 @@ Workflow for analyzing the ground truth cell painting data
 - For each dose in the 24 hour timepoint
     - Calcualte coef of variation of mahalanobis distances to access best dose to screen at
 
-**2_GT_screen_analaysis.ipynb**: Analysis of GT screen, 316 perturbations, 6 replicates each; DMSO negative controls; 8 positive control single compounds
+**2_GT_screen_analaysis.ipynb**: (Python)
+Analysis of GT screen, 316 perturbations, 6 replicates each; DMSO negative controls; 8 positive control single compounds
 - Loads in anndata file of harmonized GT data, adds in appropriate metadata
 - Calculates UMAP 
 - Calculates Mahalanobis distance of each perturbation replicate from DMSO
