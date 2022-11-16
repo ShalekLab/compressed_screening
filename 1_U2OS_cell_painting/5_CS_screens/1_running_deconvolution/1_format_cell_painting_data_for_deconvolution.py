@@ -11,6 +11,8 @@ import warnings
 ####################################  # Readme / How to use ########################################
 ####################################################################################################
 
+## CK 2022
+
 # Script for ingesting cell painting
 
 # For each cell painting run, writes a

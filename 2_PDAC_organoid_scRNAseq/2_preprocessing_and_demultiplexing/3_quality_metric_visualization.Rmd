@@ -1,0 +1,74 @@
+---
+title: "Visualizing scRNA-seq quality metrics PDAC compressed screen plate1"
+---
+
+### Metadata
+
+# * Human PDAC organoids CS perturbations over ~7 days
+# 
+# ### Per sample hashing analysis
+
+#### Load packages
+```{r setup, include=FALSE}
+Sys.setenv(PATH = paste("/Users/bemead/anaconda3/bin", Sys.getenv("PATH"), sep=":"))
+library(tidyverse, quietly = T)
+library(Seurat, quietly = T)
+library(ggplot2)
+library(scales)
+knitr::opts_knit$set(root.dir = normalizePath(".."))
+```
+
+
+```{r}
+Q1 = readRDS('1_Preprocess/PDAC_CS_SSwl_q1_demulti_g500_BEM_20220901.rds')
+```
+
+```{r}
+# get some stats about # of cells / well
+well_counts = as.data.frame(table(Q1$sample_well))
+well_counts = rename(well_counts, sample_well = Var1)
+well_counts =rename(well_counts, cell_num = Freq)
+
+ggplot(well_counts, aes(cell_num))+
+  geom_histogram(aes(y=..density..),binwidth = 10)+
+  geom_density(aes(cell_num))+theme_classic()+
+  geom_vline(aes(xintercept=quantile(cell_num, 0.05)), color='red')+
+  geom_vline(aes(xintercept=quantile(cell_num, 0.5)), color='red')+
+  geom_vline(aes(xintercept=quantile(cell_num, 0.95)), color='red')
+```
+
+
+```{r}
+# Norm + PCA dataset
+DefaultAssay(Q1) = 'RNA'
+Q1 = SCTransform(Q1, verbose = F)
+Q1 = RunPCA(Q1, verbose = F)
+ElbowPlot(Q1, ndims=25)
+```
+
+```{r}
+#13 & 1 - looks good
+dim = c(1:13)
+Q1 = FindNeighbors(Q1, dims = dim, k.param = ceiling(0.5*sqrt(ncol(Q1))), verbose = F)
+Q1 = FindClusters(Q1, resolution =1, algorithm = 4, verbose = F)
+Q1 = RunUMAP(Q1, reduction = "pca", dims = dim, verbose = F)
+```
+
+```{r}
+Q1.markers = FindAllMarkers(Q1, only.pos = T)
+top10 = Q1.markers %>% group_by(cluster) %>% top_n(10, avg_log2FC)
+
+Q1 = ScaleData(Q1, )
+
+pdf("1_Preprocess/plots/starsolo_wl_g500/20220901_SCT_q1_QC_plots_no_remove.pdf")
+DimPlot(Q1, reduction = "umap", label = T) + NoLegend()
+DoHeatmap(Q1, top10$gene, raster = F) + theme(axis.text.y = element_text(size=5))
+FeaturePlot(Q1, features = c("percent.mt", "percent.ribo", "nFeature_RNA", "nCount_RNA"),
+            reduction = "umap", max.cutoff = 4000)
+VlnPlot(Q1, features = c("nFeature_RNA"), pt.size = 0, sort=T)
+VlnPlot(Q1, features = c("nCount_RNA"), pt.size = 0, sort=T)
+VlnPlot(Q1, features = c("percent.mt"), pt.size = 0)
+VlnPlot(Q1, features = c("percent.ribo"), pt.size = 0)
+dev.off()
+```
+

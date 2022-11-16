@@ -2,7 +2,7 @@
 
 # Comp Screening - Example code for making random drug pools
 ## For designing compressed screens
-#### _CK Nov. 15, 2022_
+#### CK Nov. 15, 2022_
 
 ### What this does: Example function for making random pools
 ## - Defines initialize_drugs function for making random pools

@@ -1,4 +1,6 @@
 # Helper script containing a compressed screenign class used for deconvolution
+# IL 2022
+
 import sys
 import pandas as pd
 import pickle as pl

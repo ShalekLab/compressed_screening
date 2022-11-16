@@ -2,7 +2,7 @@
 
 # Comp Screening - Example code for designing picklist for Echo acoustic liquid handler
 ## For designing compressed screens
-#### _CK Nov. 15, 2022_
+#### CK Nov. 15, 2022_
 
 ### This code is currently highly bespoke to our drug library and data formats.
 

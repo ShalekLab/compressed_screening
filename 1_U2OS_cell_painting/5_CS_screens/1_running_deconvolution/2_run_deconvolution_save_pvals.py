@@ -4,6 +4,7 @@
 # Loops through all of the compressed screens, using the data in the format ingested in previous script
     # Calls functions from CompressedScreen.py & linear_deconvolution.py scripts to run deconvolution
 
+## IL, CK 2022
 
 import scanpy as sc
 import os, glob

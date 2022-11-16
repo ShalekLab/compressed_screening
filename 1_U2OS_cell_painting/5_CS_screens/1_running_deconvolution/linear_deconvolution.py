@@ -1,5 +1,5 @@
 # Helper script containing functions for running regularized regression deconvolution with permutation testing
-
+# BEM, CK 2022
 
 import numpy as np
 import pandas as pd
