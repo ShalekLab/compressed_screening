@@ -4,7 +4,7 @@
 
 Code for the manuscript *Efficiently generating bio-chemical perturbation signatures in complex cellular systems by compressed screening*.
 
-Key contributors
+Key code contributors
 - Conner Kummerlowe, co-lead 
 - Ben Mead, co-lead
 - Ivy Liu, contributor (cNMF, deconvolution scripts)
