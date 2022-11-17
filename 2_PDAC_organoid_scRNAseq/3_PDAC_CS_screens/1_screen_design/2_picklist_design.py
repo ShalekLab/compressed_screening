@@ -1,11 +1,23 @@
 #!/usr/bin/env python3
 
+# CK 2021
+# Designing the PDAC compressed screens, makes filesfor running a compressed screens with an Echo acoustic liquid handler.With an Echo, need to tell it to flies drops from source plates to destination plates
+# - Inputs
+#     - Drug library plate layout csv
+#     - Npy files of the random pool layour from make_random_pools.py
+# - Outputs for each desintation plate:
+#     - picklist: csv input to Echo, tells it what drops come from  which source plates and go to which wells in destination plate
+#     - Metadata: csv that records for each well in the desintation plate what the dose, time, comrpession, replicates, etc are
+#     - Well_drug_dict: dictionary describing wells in destation plate, keys are wells, values are lists of the perturbations in that well
+#     - Pool_key: intermediate file used for building above, not used in downstream analysis
+
 import sys
 import numpy as np
 import pandas as pd
 import pickle
 import math
 import string
+
 
 ##############################################################################
 ##############################################################################
