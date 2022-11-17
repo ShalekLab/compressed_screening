@@ -2,4 +2,4 @@
 
 Code for the manuscript *Efficiently generating bio-chemical perturbation signatures in complex cellular systems by compressed screening*.
 
-![compressedScreening](compressed_screening.pdf)
+![compressedScreening](compressed_screening.png)
